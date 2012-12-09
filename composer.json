@@ -2,7 +2,7 @@
 	"name": "flame/facebook-api-package",
     "description": "Collection of classes for working with Facebook PHP SDK",
     "keywords": ["flame", "facebook", "api", "phpsdk", "jsifalda", "tools", "package"],
-    "homepage": "https://github.com/jsifalda/Facebook-API-Package",
+    "homepage": "https://github.com/flame-org/Facebook-API-Package",
     "license": "BSD-2-Clause-FreeBSD",
 
     "authors": [
@@ -14,7 +14,7 @@
 
     "support":{
         "email":"flame@jsifalda.name",
-        "issues":"https://github.com/jsifalda/Facebook-API-Package/issues"
+        "issues":"https://github.com/flame-org/Facebook-API-Package/issues"
     },
 
 	"require": {
