@@ -10,6 +10,8 @@
 
 namespace Flame\Facebook;
 
+use Nette\Diagnostics\Debugger;
+
 class UserService extends \Nette\Object
 {
 
@@ -52,12 +54,13 @@ class UserService extends \Nette\Object
 		try {
 			return $this->facebook->api($this->user);
 		}catch (\FacebookApiException $ex){
+			Debugger::log($ex);
 			$this->user = null;
 		}
 	}
 
 	/**
-	 * @return null
+	 * @return mixed
 	 */
 	public function getAvatarUrl()
 	{
@@ -73,6 +76,7 @@ class UserService extends \Nette\Object
 				return $fields['picture']['data']['url'];
 
 		}catch (\FacebookApiException $ex){
+			Debugger::log($ex);
 			$this->user = null;
 		}
 	}
@@ -91,7 +95,7 @@ class UserService extends \Nette\Object
 				return $friends['data'];
 
 		}catch (\FacebookApiException $ex){
-			\Nette\Diagnostics\Debugger::log($ex);
+			Debugger::log($ex);
 			$this->user = null;
 		}
 	}
