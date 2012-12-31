@@ -78,6 +78,25 @@ class UserService extends \Nette\Object
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function getFriends()
+	{
+		if(!$this->getUser()) return;
+
+		try {
+			$friends = $this->facebook->api('/me/friends');
+
+			if(isset($friends['data']))
+				return $friends['data'];
+
+		}catch (\FacebookApiException $ex){
+			\Nette\Diagnostics\Debugger::log($ex);
+			$this->user = null;
+		}
+	}
+
+	/**
 	 * @param $key
 	 * @param null $default
 	 * @return null
