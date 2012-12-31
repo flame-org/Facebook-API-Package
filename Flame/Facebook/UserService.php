@@ -26,11 +26,18 @@ class UserService extends \Nette\Object
 	private $facebook;
 
 	/**
-	 * @param \Facebook $facebook
+	 * @var \Nette\Http\IRequest
 	 */
-	public function __construct(\Facebook $facebook)
+	private $httpRequest;
+
+	/**
+	 * @param \Facebook $facebook
+	 * @param \Nette\Http\IRequest $request
+	 */
+	public function __construct(\Facebook $facebook, \Nette\Http\IRequest $request)
 	{
 		$this->facebook = $facebook;
+		$this->httpRequest = $request;
 	}
 
 	/**
@@ -120,6 +127,20 @@ class UserService extends \Nette\Object
 		$params = array('scope' => 'email', 'display' => 'popup');
 		if($redirect) $params += array('redirect_uri' => $redirect);
 		return $this->facebook->getLoginUrl($params);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function logout()
+	{
+		$fbCookieName = 'fbsr_' . $this->facebook->getAppId();
+		if ($this->httpRequest->getCookie($fbCookieName) !== null) {
+			$this->httpRequest->deleteCookie($fbCookieName);
+		}
+		$this->facebook->destroySession();
+
+		return true;
 	}
 
 	/**
