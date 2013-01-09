@@ -67,25 +67,26 @@ class UserService extends \Nette\Object
 	}
 
 	/**
+	 * @param int $width
+	 * @param int $height
 	 * @return mixed
 	 */
-	public function getAvatarUrl()
+	public function getAvatarUrl($width = 450, $height = 450)
 	{
 		if(!$this->getUser()) return;
 
-		try {
-			$fields = $this->facebook->api($this->user, array(
-				'fields' => 'picture',
-				'type'   => 'large'
-			));
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,
+			'http://graph.facebook.com/' . $this->getUser() . '/picture?width=' . $width . '&height=' . $height);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_NOBODY, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_exec($ch);
+		$url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+		curl_close($ch);
 
-			if(isset($fields['picture']['data']['url']))
-				return $fields['picture']['data']['url'];
-
-		}catch (\FacebookApiException $ex){
-			Debugger::log($ex);
-			$this->user = null;
-		}
+		return $url;
 	}
 
 	/**
