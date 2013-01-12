@@ -71,22 +71,13 @@ class UserService extends \Nette\Object
 	 * @param int $height
 	 * @return mixed
 	 */
-	public function getAvatarUrl($width = 450, $height = 450)
+	public function getAvatarUrl($width = 200, $height = 200)
 	{
 		if(!$this->getUser()) return;
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,
-			'http://graph.facebook.com/' . $this->getUser() . '/picture?width=' . $width . '&height=' . $height);
-		curl_setopt($ch, CURLOPT_HEADER, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_NOBODY, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_exec($ch);
-		$url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
-		curl_close($ch);
-
-		return $url;
+		$headers = get_headers('https://graph.facebook.com/' . $this->getUser() . '/picture?width=' . $width . '&height=' . $height, 1);
+		if(isset($headers['Location']))
+			return $headers['Location'];
 	}
 
 	/**
