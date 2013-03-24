@@ -111,13 +111,17 @@ class UserService extends \Nette\Object
 	}
 
 	/**
+	 * @param array $params
 	 * @param null $redirect
 	 * @return string
 	 */
-	public function getLoginurl($redirect = null)
+	public function getLoginUrl(array $params, $redirect = null)
 	{
-		$params = array('scope' => 'email');
-		if($redirect) $params += array('redirect_uri' => $redirect);
+		if($redirect)
+			$params += array(
+				'redirect_uri' => $redirect,
+				'next' => $redirect
+			);
 		return $this->facebook->getLoginUrl($params);
 	}
 
