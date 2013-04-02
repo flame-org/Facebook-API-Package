@@ -31,13 +31,20 @@ class UserService extends \Nette\Object
 	private $httpRequest;
 
 	/**
+	 * @var \Nette\Http\IResponse
+	 */
+	private $httpResponse;
+
+	/**
 	 * @param \Facebook $facebook
 	 * @param \Nette\Http\IRequest $request
+	 * @param \Nette\Http\IResponse $response
 	 */
-	public function __construct(\Facebook $facebook, \Nette\Http\IRequest $request)
+	public function __construct(\Facebook $facebook, \Nette\Http\IRequest $request, \Nette\Http\IResponse $response)
 	{
 		$this->facebook = $facebook;
 		$this->httpRequest = $request;
+		$this->httpResponse = $response;
 	}
 
 	/**
@@ -132,7 +139,7 @@ class UserService extends \Nette\Object
 	{
 		$fbCookieName = 'fbsr_' . $this->facebook->getAppId();
 		if ($this->httpRequest->getCookie($fbCookieName) !== null) {
-			$this->httpRequest->deleteCookie($fbCookieName);
+			$this->httpResponse->deleteCookie($fbCookieName);
 		}
 		$this->facebook->destroySession();
 
