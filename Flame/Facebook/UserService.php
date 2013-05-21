@@ -82,7 +82,7 @@ class UserService extends \Nette\Object
 	{
 		if(!$this->getUser()) return;
 
-		$headers = get_headers('https://graph.facebook.com/' . $this->getUser() . '/picture?width=' . $width . '&height=' . $height, 1);
+		$headers = @get_headers('https://graph.facebook.com/' . $this->getUser() . '/picture?width=' . $width . '&height=' . $height, 1);
 		if(isset($headers['Location']))
 			return $headers['Location'];
 	}
