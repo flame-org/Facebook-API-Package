@@ -15,7 +15,7 @@ use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Object;
 
-class UserService extends Object
+class Profile extends Object
 {
 
 	/** @var \Facebook  */
