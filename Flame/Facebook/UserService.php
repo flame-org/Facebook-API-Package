@@ -11,28 +11,20 @@
 namespace Flame\Facebook;
 
 use Nette\Diagnostics\Debugger;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
+use Nette\Object;
 
-class UserService extends \Nette\Object
+class UserService extends Object
 {
 
-	/**
-	 * @var string
-	 */
-	private $user;
-
-	/**
-	 * @var \Facebook $facebook
-	 */
+	/** @var \Facebook  */
 	private $facebook;
 
-	/**
-	 * @var \Nette\Http\IRequest
-	 */
+	/** @var \Nette\Http\IRequest  */
 	private $httpRequest;
 
-	/**
-	 * @var \Nette\Http\IResponse
-	 */
+	/** @var \Nette\Http\IResponse  */
 	private $httpResponse;
 
 	/**
@@ -40,7 +32,7 @@ class UserService extends \Nette\Object
 	 * @param \Nette\Http\IRequest $request
 	 * @param \Nette\Http\IResponse $response
 	 */
-	public function __construct(\Facebook $facebook, \Nette\Http\IRequest $request, \Nette\Http\IResponse $response)
+	public function __construct(\Facebook $facebook, IRequest $request, IResponse $response)
 	{
 		$this->facebook = $facebook;
 		$this->httpRequest = $request;
@@ -52,10 +44,7 @@ class UserService extends \Nette\Object
 	 */
 	public function getUser()
 	{
-		if($this->user === null)
-			$this->user = $this->facebook->getUser();
-
-		return $this->user;
+		return $this->facebook->getUser();
 	}
 
 	/**
@@ -63,13 +52,10 @@ class UserService extends \Nette\Object
 	 */
 	public function getData()
 	{
-		if(!$this->getUser()) return;
-
 		try {
-			return $this->facebook->api($this->user);
+			return $this->facebook->api('/me');
 		}catch (\FacebookApiException $ex){
 			Debugger::log($ex);
-			$this->user = null;
 		}
 	}
 
@@ -80,11 +66,12 @@ class UserService extends \Nette\Object
 	 */
 	public function getAvatarUrl($width = 200, $height = 200)
 	{
-		if(!$this->getUser()) return;
+		if($this->getUser()) {
+			$headers = @get_headers('https://graph.facebook.com/' . $this->getUser() . '/picture?width=' . $width . '&height=' . $height, 1);
 
-		$headers = @get_headers('https://graph.facebook.com/' . $this->getUser() . '/picture?width=' . $width . '&height=' . $height, 1);
-		if(isset($headers['Location']))
-			return $headers['Location'];
+			if(isset($headers['Location']))
+				return $headers['Location'];
+		}
 	}
 
 	/**
@@ -92,8 +79,6 @@ class UserService extends \Nette\Object
 	 */
 	public function getFriends()
 	{
-		if(!$this->getUser()) return;
-
 		try {
 			$friends = $this->facebook->api('/me/friends');
 
@@ -102,7 +87,6 @@ class UserService extends \Nette\Object
 
 		}catch (\FacebookApiException $ex){
 			Debugger::log($ex);
-			$this->user = null;
 		}
 	}
 
@@ -113,7 +97,7 @@ class UserService extends \Nette\Object
 	 */
 	public function getDataBy($key, $default = null)
 	{
-		$api = $this->getUserData();
+		$api = $this->getData();
 		return (isset($api[$key])) ? $api[$key] : $default;
 	}
 
