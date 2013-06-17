@@ -19,17 +19,12 @@ class Profile extends Object
 	/** @var \Facebook  */
 	private $facebook;
 
-	/** @var \Flame\Facebook\Cookies  */
-	private $cookies;
-
 	/**
 	 * @param \Facebook $facebook
-	 * @param Cookies   $cookies
 	 */
-	public function __construct(\Facebook $facebook, Cookies $cookies)
+	public function __construct(\Facebook $facebook)
 	{
 		$this->facebook = $facebook;
-		$this->cookies = $cookies;
 	}
 
 	/**
@@ -130,7 +125,6 @@ class Profile extends Object
 
 	public function logout()
 	{
-		$this->cookies->destroy($this->facebook->getAppId());
 		$this->facebook->destroySession();
 	}
 
