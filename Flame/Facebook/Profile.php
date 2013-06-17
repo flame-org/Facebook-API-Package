@@ -11,8 +11,6 @@
 namespace Flame\Facebook;
 
 use Nette\Diagnostics\Debugger;
-use Nette\Http\IRequest;
-use Nette\Http\IResponse;
 use Nette\Object;
 
 class Profile extends Object
@@ -21,22 +19,17 @@ class Profile extends Object
 	/** @var \Facebook  */
 	private $facebook;
 
-	/** @var \Nette\Http\IRequest  */
-	private $httpRequest;
-
-	/** @var \Nette\Http\IResponse  */
-	private $httpResponse;
+	/** @var \Flame\Facebook\Cookies  */
+	private $cookies;
 
 	/**
 	 * @param \Facebook $facebook
-	 * @param \Nette\Http\IRequest $request
-	 * @param \Nette\Http\IResponse $response
+	 * @param Cookies   $cookies
 	 */
-	public function __construct(\Facebook $facebook, IRequest $request, IResponse $response)
+	public function __construct(\Facebook $facebook, Cookies $cookies)
 	{
 		$this->facebook = $facebook;
-		$this->httpRequest = $request;
-		$this->httpResponse = $response;
+		$this->cookies = $cookies;
 	}
 
 	/**
@@ -121,12 +114,8 @@ class Profile extends Object
 	 */
 	public function logout()
 	{
-		$fbCookieName = 'fbsr_' . $this->facebook->getAppId();
-		if ($this->httpRequest->getCookie($fbCookieName) !== null) {
-			$this->httpResponse->deleteCookie($fbCookieName);
-		}
+		$this->cookies->destroy($this->facebook->getAppId());
 		$this->facebook->destroySession();
-
 		return true;
 	}
 
