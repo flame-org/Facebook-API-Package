@@ -10,7 +10,7 @@
 
 namespace Flame\Facebook;
 
-use Nette\Diagnostics\Debugger;
+use Nette\InvalidStateException;
 use Nette\Object;
 
 class Profile extends Object
@@ -50,18 +50,19 @@ class Profile extends Object
 
 	/**
 	 * @return mixed
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function getData()
 	{
 		try {
 			return $this->facebook->api('/me');
 		}catch (\FacebookApiException $ex){
-			Debugger::log($ex);
+			throw new InvalidStateException($ex->getMessage());
 		}
 	}
 
 	/**
-	 * @param $key
+	 * @param      $key
 	 * @param null $default
 	 * @return null
 	 */
@@ -88,6 +89,7 @@ class Profile extends Object
 
 	/**
 	 * @return mixed
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function getFriends()
 	{
@@ -98,7 +100,7 @@ class Profile extends Object
 				return $friends['data'];
 
 		}catch (\FacebookApiException $ex){
-			Debugger::log($ex);
+			throw new InvalidStateException($ex->getMessage());
 		}
 	}
 
@@ -114,6 +116,7 @@ class Profile extends Object
 				'redirect_uri' => $redirect,
 				'next' => $redirect
 			);
+
 		return $this->facebook->getLoginUrl($params);
 	}
 
