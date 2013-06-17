@@ -43,7 +43,7 @@ class Profile extends Object
 	/**
 	 * @return string
 	 */
-	public function getUser()
+	public function getId()
 	{
 		return $this->facebook->getUser();
 	}
@@ -79,10 +79,10 @@ class Profile extends Object
 	 */
 	public function getAvatarUrl($width = 200, $height = 200)
 	{
-		if($this->getUser()) {
+		if($this->getId()) {
 
 			$url = 'https://graph.facebook.com/' .
-				$this->getUser() . '/picture?width=' . (string) $width . '&height=' . (string) $height;
+				$this->getId() . '/picture?width=' . (string) $width . '&height=' . (string) $height;
 
 			$headers = @get_headers($url, 1);
 
