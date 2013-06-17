@@ -96,8 +96,11 @@ class Profile extends Object
 		try {
 			$friends = $this->facebook->api('/me/friends');
 
-			if(isset($friends['data']))
+			if(isset($friends['data'])) {
 				return $friends['data'];
+			}
+
+			return array();
 
 		}catch (\FacebookApiException $ex){
 			throw new InvalidStateException($ex->getMessage());
