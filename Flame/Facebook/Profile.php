@@ -33,6 +33,14 @@ class Profile extends Object
 	}
 
 	/**
+	 * @return \Facebook
+	 */
+	public function getFacebook()
+	{
+		return $this->facebook;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getUser()
@@ -50,6 +58,17 @@ class Profile extends Object
 		}catch (\FacebookApiException $ex){
 			Debugger::log($ex);
 		}
+	}
+
+	/**
+	 * @param $key
+	 * @param null $default
+	 * @return null
+	 */
+	public function getDataBy($key, $default = null)
+	{
+		$api = $this->getData();
+		return (isset($api[$key])) ? $api[$key] : $default;
 	}
 
 	/**
@@ -84,17 +103,6 @@ class Profile extends Object
 	}
 
 	/**
-	 * @param $key
-	 * @param null $default
-	 * @return null
-	 */
-	public function getDataBy($key, $default = null)
-	{
-		$api = $this->getData();
-		return (isset($api[$key])) ? $api[$key] : $default;
-	}
-
-	/**
 	 * @param array $params
 	 * @param null $redirect
 	 * @return string
@@ -109,22 +117,10 @@ class Profile extends Object
 		return $this->facebook->getLoginUrl($params);
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function logout()
 	{
 		$this->cookies->destroy($this->facebook->getAppId());
 		$this->facebook->destroySession();
-		return true;
-	}
-
-	/**
-	 * @return \Facebook
-	 */
-	public function getFacebookService()
-	{
-		return $this->facebook;
 	}
 
 }
