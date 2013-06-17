@@ -80,10 +80,15 @@ class Profile extends Object
 	public function getAvatarUrl($width = 200, $height = 200)
 	{
 		if($this->getUser()) {
-			$headers = @get_headers('https://graph.facebook.com/' . $this->getUser() . '/picture?width=' . $width . '&height=' . $height, 1);
 
-			if(isset($headers['Location']))
+			$url = 'https://graph.facebook.com/' .
+				$this->getUser() . '/picture?width=' . (string) $width . '&height=' . (string) $height;
+
+			$headers = @get_headers($url, 1);
+
+			if(isset($headers['Location'])) {
 				return $headers['Location'];
+			}
 		}
 	}
 
