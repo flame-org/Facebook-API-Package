@@ -74,10 +74,10 @@ class Profile extends Object
 	 */
 	public function getAvatarUrl($width = 200, $height = 200)
 	{
-		if($this->getId()) {
+		if($fbId = $this->getId()) {
 
 			$url = 'https://graph.facebook.com/' .
-				$this->getId() . '/picture?width=' . (string) $width . '&height=' . (string) $height;
+				$fbId . '/picture?width=' . (string) $width . '&height=' . (string) $height;
 
 			$headers = @get_headers($url, 1);
 
@@ -112,9 +112,9 @@ class Profile extends Object
 	 * @param null $redirect
 	 * @return string
 	 */
-	public function getLoginUrl(array $params, $redirect = null)
+	public function getLoginUrl(array $params = array(), $redirect = null)
 	{
-		if($redirect)
+		if($redirect !== null)
 			$params += array(
 				'redirect_uri' => $redirect,
 				'next' => $redirect
