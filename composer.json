@@ -23,6 +23,15 @@
         "facebook/php-sdk": ">=3.2.0"
 	},
 
+    "require-dev": {
+        "flame/tester": "@dev",
+        "janmarek/mockista": "@dev"
+    },
+
+    "config": {
+        "vendor-dir": "libs"
+    },
+
 	"autoload": {
 		"psr-0": {"Flame": ""}
 	}
